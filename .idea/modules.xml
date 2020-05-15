@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ArchitectureCourseProject.iml" filepath="$PROJECT_DIR$/ArchitectureCourseProject.iml" group="ArchitectureCourseProject" />
+      <module fileurl="file://$PROJECT_DIR$/app/ArchitectureCourseProject-app.iml" filepath="$PROJECT_DIR$/app/ArchitectureCourseProject-app.iml" group="ArchitectureCourseProject/app" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/coursera.iml" filepath="$PROJECT_DIR$/coursera.iml" />
+    </modules>
+  </component>
+</project>
