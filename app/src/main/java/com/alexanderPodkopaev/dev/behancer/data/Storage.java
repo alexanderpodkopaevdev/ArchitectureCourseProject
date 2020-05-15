@@ -1,6 +1,6 @@
 package com.alexanderPodkopaev.dev.behancer.data;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.alexanderPodkopaev.dev.behancer.data.database.BehanceDao;
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Cover;

@@ -1,7 +1,7 @@
 package com.alexanderPodkopaev.dev.behancer;
 
 import android.app.Application;
-import android.arch.persistence.room.Room;
+import androidx.room.Room;
 
 import com.alexanderPodkopaev.dev.behancer.data.database.BehanceDatabase;
 import com.alexanderPodkopaev.dev.behancer.data.Storage;

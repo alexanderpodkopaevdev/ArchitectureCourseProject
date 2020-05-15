@@ -1,6 +1,6 @@
 package com.alexanderPodkopaev.dev.behancer.data.api;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.alexanderPodkopaev.dev.behancer.BuildConfig;
 

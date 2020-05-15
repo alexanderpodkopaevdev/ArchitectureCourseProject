@@ -1,6 +1,6 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.alexanderPodkopaev.dev.behancer.common.SingleFragmentActivity;
 
