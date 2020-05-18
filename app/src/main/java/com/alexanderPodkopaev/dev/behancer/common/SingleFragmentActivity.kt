@@ -24,7 +24,7 @@ abstract class SingleFragmentActivity : AppCompatActivity(), StorageOwner, OnRef
     }
 
     protected abstract val fragment: Fragment
-    override fun obtainStorage(): Storage? {
+    override fun obtainStorage(): Storage {
         return (applicationContext as AppDelegate).storage
     }
 

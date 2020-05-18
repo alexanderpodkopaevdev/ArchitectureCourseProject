@@ -7,15 +7,14 @@ import com.alexanderPodkopaev.dev.behancer.data.database.BehanceDatabase
 
 
 class AppDelegate : Application() {
-    var storage: Storage? = null
-        private set
+    lateinit var storage: Storage
 
     override fun onCreate() {
         super.onCreate()
         val database = Room.databaseBuilder(this,BehanceDatabase::class.java , "behance_database")
                 .fallbackToDestructiveMigration()
                 .build()
-        storage = database.behanceDao?.let { Storage(it) }
+        storage = Storage(database.behanceDao)
     }
 
 }

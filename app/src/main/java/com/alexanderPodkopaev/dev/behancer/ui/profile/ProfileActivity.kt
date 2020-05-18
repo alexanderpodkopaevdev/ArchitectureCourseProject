@@ -6,7 +6,7 @@ import com.alexanderPodkopaev.dev.behancer.common.SingleFragmentActivity
 
 class ProfileActivity : SingleFragmentActivity() {
     protected override val fragment: Fragment
-        protected get() {
+        get() {
             if (intent != null) {
                 return ProfileFragment.Companion.newInstance(intent.getBundleExtra(USERNAME_KEY))
             }

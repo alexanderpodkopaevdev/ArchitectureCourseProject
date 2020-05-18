@@ -11,5 +11,5 @@ import com.alexanderPodkopaev.dev.behancer.data.model.user.User
 
 @Database(entities = [Project::class, Cover::class, Owner::class, User::class, Image::class], version = 1)
 abstract class BehanceDatabase : RoomDatabase() {
-    abstract val behanceDao: BehanceDao?
+    abstract val behanceDao: BehanceDao
 }
