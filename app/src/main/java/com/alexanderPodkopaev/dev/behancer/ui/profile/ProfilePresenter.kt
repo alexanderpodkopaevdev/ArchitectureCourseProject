@@ -34,4 +34,8 @@ class ProfilePresenter(private val mStorage: Storage?) : BasePresenter<ProfileVi
 
     }
 
+    fun openUserProject(username: String?) {
+        viewState.openUserProject(username)
+    }
+
 }

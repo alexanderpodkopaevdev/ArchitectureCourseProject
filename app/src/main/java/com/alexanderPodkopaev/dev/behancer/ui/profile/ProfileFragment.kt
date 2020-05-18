@@ -69,7 +69,7 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
         mProfileLocation = view.findViewById(R.id.tv_location_details)
         mBtnShowProjects = view.findViewById(R.id.btn_show_projects)
         mBtnShowProjects.setOnClickListener {
-            showProjects()
+            mPresenter.openUserProject(mUsername)
         }
     }
 
@@ -121,10 +121,10 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
         bind(user)
     }
 
-    override fun showProjects() {
+    override fun openUserProject(username: String?) {
         val intent = Intent(activity, UserProjectsActivity::class.java)
         val args = Bundle()
-        args.putString(ProjectsFragment.PROJECT_KEY, mUsername)
+        args.putString(ProjectsFragment.PROJECT_KEY, username)
         intent.putExtra(ProfileActivity.USERNAME_KEY, args)
         startActivity(intent)
     }
