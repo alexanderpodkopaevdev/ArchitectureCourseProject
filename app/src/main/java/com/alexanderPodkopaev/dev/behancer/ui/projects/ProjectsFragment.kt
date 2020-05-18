@@ -20,10 +20,10 @@ import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileFragment
 
 
 class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
-    private val myTag: String = "MyLOG"
-    private var mRecyclerView: RecyclerView? = null
+
+    lateinit var mRecyclerView: RecyclerView
     private var mRefreshOwner: RefreshOwner? = null
-    private var mErrorView: View? = null
+    lateinit var mErrorView: View
     private var mStorage: Storage? = null
     private var mProjectsAdapter: ProjectsAdapter? = null
     lateinit var mPresenter: ProjectsPresenter
@@ -49,13 +49,11 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), ProjectsView, R
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (activity != null) {
-            activity!!.setTitle(R.string.projects)
-        }
+        activity?.setTitle(R.string.projects)
         mPresenter = ProjectsPresenter(this, mStorage)
         mProjectsAdapter = ProjectsAdapter(this)
-        mRecyclerView!!.layoutManager = LinearLayoutManager(activity)
-        mRecyclerView!!.adapter = mProjectsAdapter
+        mRecyclerView.layoutManager = LinearLayoutManager(activity)
+        mRecyclerView.adapter = mProjectsAdapter
         onRefreshData()
     }
 
@@ -79,8 +77,8 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), ProjectsView, R
     }
 
     override fun showProjects(projects: List<Project>?) {
-        mErrorView?.visibility = View.GONE
-        mRecyclerView?.visibility = View.VISIBLE
+        mErrorView.visibility = View.GONE
+        mRecyclerView.visibility = View.VISIBLE
         mProjectsAdapter?.addData(projects, true)
     }
 

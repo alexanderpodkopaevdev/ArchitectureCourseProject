@@ -11,14 +11,16 @@ import java.util.*
 
 
 class Storage(private val mBehanceDao: BehanceDao) {
-    fun insertProjects(response: ProjectResponse) {
-        val projects = response.projects
-        mBehanceDao.insertProjects(projects)
-        val assembled = assemble(projects)
-        mBehanceDao.clearCoverTable()
-        mBehanceDao.insertCovers(assembled.first!!)
-        mBehanceDao.clearOwnerTable()
-        mBehanceDao.insertOwners(assembled.second!!)
+    fun insertProjects(response: ProjectResponse?) {
+        response?.let {
+            val projects = it.projects
+            mBehanceDao.insertProjects(projects)
+            val assembled = assemble(projects)
+            mBehanceDao.clearCoverTable()
+            mBehanceDao.insertCovers(assembled.first!!)
+            mBehanceDao.clearOwnerTable()
+            mBehanceDao.insertOwners(assembled.second!!)
+        }
     }
 
     private fun assemble(projects: List<Project>): Pair<List<Cover>, List<Owner>> {
@@ -38,31 +40,35 @@ class Storage(private val mBehanceDao: BehanceDao) {
     }
 
     fun getProjects(): ProjectResponse {
-            val projects = mBehanceDao.projects
-            for (project in projects) {
-                project.setCover(mBehanceDao.getCoverFromProject(project.id))
-                project.setOwners(mBehanceDao.getOwnersFromProject(project.id))
-            }
-            val response = ProjectResponse()
-            response.projects = projects
-            return response
+        val projects = mBehanceDao.projects
+        for (project in projects) {
+            project.setCover(mBehanceDao.getCoverFromProject(project.id))
+            project.setOwners(mBehanceDao.getOwnersFromProject(project.id))
         }
-
-    fun insertUser(response: UserResponse) {
-        val user = response.user
-        val image = user.image
-        image.id = user.id
-        image.userId = user.id
-        mBehanceDao.insertUser(user)
-        mBehanceDao.insertImage(image)
+        val response = ProjectResponse()
+        response.projects = projects
+        return response
     }
 
-    fun getUser(username: String): UserResponse {
-        val user = mBehanceDao.getUserByName(username)
-        val image = mBehanceDao.getImageFromUser(user.id)
-        user.setImage(image)
+    fun insertUser(response: UserResponse?) {
+        response?.let {
+            val user = it.user
+            val image = user.image
+            image.id = user.id
+            image.userId = user.id
+            mBehanceDao.insertUser(user)
+            mBehanceDao.insertImage(image)
+        }
+    }
+
+    fun getUser(username: String?): UserResponse {
         val response = UserResponse()
-        response.user = user
+        username?.let {
+            val user = mBehanceDao.getUserByName(username)
+            val image = mBehanceDao.getImageFromUser(user.id)
+            user.setImage(image)
+            response.user = user
+        }
         return response
     }
 
