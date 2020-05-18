@@ -1,4 +1,4 @@
-package com.alexanderPodkopaev.dev.behancer.ui.projects
+package com.alexanderPodkopaev.dev.behancer.ui.userProjects
 
 import android.content.Context
 import android.content.Intent
@@ -17,11 +17,14 @@ import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileActivity
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileFragment
+import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsAdapter
+import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsPresenter
+import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsView
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
+class UserProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
 
     lateinit var mRecyclerView: RecyclerView
     private var mRefreshOwner: RefreshOwner? = null
@@ -75,7 +78,7 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
     }
 
     override fun onItemClick(username: String?) {
-        mPresenter.openProfileFragment(username)
+        //mPresenter.openProfileFragment(username)
     }
 
     override fun onDetach() {
@@ -85,7 +88,7 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
     }
 
     override fun onRefreshData() {
-        mPresenter.getProjects()
+        mPresenter.getProjects(mUsername)
     }
 
 
@@ -119,9 +122,10 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
 
     companion object {
         const val PROJECT_KEY = "PROJECT_KEY"
-        fun newInstance(): ProjectsFragment {
-            return ProjectsFragment()
-
+        fun newInstance(args: Bundle?): UserProjectsFragment {
+            val fragment = UserProjectsFragment()
+            fragment.arguments = args
+            return fragment
         }
     }
 }

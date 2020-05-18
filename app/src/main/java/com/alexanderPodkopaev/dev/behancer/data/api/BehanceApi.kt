@@ -14,4 +14,7 @@ interface BehanceApi {
 
     @GET("v2/users/{username}")
     fun getUserInfo(@Path("username") username: String?): Single<UserResponse?>
+
+    @GET("/v2/users/{user}/projects")
+    fun getUserProjects(@Path("user") username: String?): Single<ProjectResponse?>
 }

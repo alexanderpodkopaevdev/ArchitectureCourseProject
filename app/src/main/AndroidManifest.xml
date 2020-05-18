@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileActivity" />
+        <activity android:name="com.alexanderPodkopaev.dev.behancer.ui.userProjects.UserProjectsActivity" />
     </application>
 
 </manifest>

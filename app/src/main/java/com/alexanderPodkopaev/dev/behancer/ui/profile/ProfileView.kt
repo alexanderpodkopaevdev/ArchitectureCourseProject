@@ -5,4 +5,5 @@ import com.alexanderPodkopaev.dev.behancer.data.model.user.User
 
 interface ProfileView : BaseView {
     fun showProfile(user: User?)
+    fun showProjects()
 }

@@ -15,23 +15,46 @@ class ProjectsPresenter(private val mStorage: Storage?) : BasePresenter<Projects
     fun getProjects() {
         mCompositeDisposable
                 .add(ApiUtils.getApiService()
-                .getProjects(BuildConfig.API_QUERY)
-                .doOnSuccess { response: ProjectResponse? -> mStorage?.insertProjects(response)  }
-                .onErrorReturn { throwable: Throwable ->
-                    if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.javaClass)) mStorage?.getProjects() else null
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { viewState.showRefresh() }
-                .doFinally { viewState.hideRefresh() }
-                .subscribe(
-                        {response ->
-                            viewState.showProjects(response?.projects)
+                        .getProjects(BuildConfig.API_QUERY)
+                        .doOnSuccess { response: ProjectResponse? -> mStorage?.insertProjects(response) }
+                        .onErrorReturn { throwable: Throwable ->
+                            if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.javaClass)) mStorage?.getProjects() else null
                         }
-                ) {
-                    viewState.showError()
-                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe { viewState.showRefresh() }
+                        .doFinally { viewState.hideRefresh() }
+                        .subscribe(
+                                { response ->
+                                    viewState.showProjects(response?.projects)
+                                }
+                        ) {
+                            viewState.showError()
+                        })
+
     }
+
+    fun getProjects(username: String?) {
+        mCompositeDisposable
+                .add(ApiUtils.getApiService()
+                        .getUserProjects(username)
+                        /*.doOnSuccess { response: ProjectResponse? -> mStorage?.insertProjects(response) }
+                        .onErrorReturn { throwable: Throwable ->
+                            if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.javaClass)) mStorage?.getProjects() else null
+                        }*/
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe { viewState.showRefresh() }
+                        .doFinally { viewState.hideRefresh() }
+                        .subscribe(
+                                { response ->
+                                    viewState.showProjects(response?.projects)
+                                }
+                        ) {
+                            viewState.showError()
+                        })
+    }
+
 
     fun openProfileFragment(username: String?) {
         viewState.openProfileFragment(username)

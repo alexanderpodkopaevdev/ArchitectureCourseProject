@@ -1,10 +1,12 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.alexanderPodkopaev.dev.behancer.R
@@ -14,6 +16,9 @@ import com.alexanderPodkopaev.dev.behancer.common.Refreshable
 import com.alexanderPodkopaev.dev.behancer.data.Storage
 import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
 import com.alexanderPodkopaev.dev.behancer.data.model.user.User
+import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsActivity
+import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsFragment
+import com.alexanderPodkopaev.dev.behancer.ui.userProjects.UserProjectsActivity
 import com.alexanderPodkopaev.dev.behancer.utils.DateUtils
 import com.squareup.picasso.Picasso
 import moxy.presenter.InjectPresenter
@@ -30,6 +35,7 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
     lateinit var mProfileName: TextView
     lateinit var mProfileCreatedOn: TextView
     lateinit var mProfileLocation: TextView
+    lateinit var mBtnShowProjects: Button
 
     @InjectPresenter
     internal lateinit var mPresenter: ProfilePresenter
@@ -61,6 +67,10 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
         mProfileName = view.findViewById(R.id.tv_display_name_details)
         mProfileCreatedOn = view.findViewById(R.id.tv_created_on_details)
         mProfileLocation = view.findViewById(R.id.tv_location_details)
+        mBtnShowProjects = view.findViewById(R.id.btn_show_projects)
+        mBtnShowProjects.setOnClickListener {
+            showProjects()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -109,6 +119,14 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
         mErrorView.visibility = View.GONE
         mProfileView.visibility = View.VISIBLE
         bind(user)
+    }
+
+    override fun showProjects() {
+        val intent = Intent(activity, UserProjectsActivity::class.java)
+        val args = Bundle()
+        args.putString(ProjectsFragment.PROJECT_KEY, mUsername)
+        intent.putExtra(ProfileActivity.USERNAME_KEY, args)
+        startActivity(intent)
     }
 
     override fun showRefresh() {
