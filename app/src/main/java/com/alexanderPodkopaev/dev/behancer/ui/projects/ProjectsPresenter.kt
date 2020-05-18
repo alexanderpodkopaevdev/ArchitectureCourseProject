@@ -1,6 +1,5 @@
 package com.alexanderPodkopaev.dev.behancer.ui.projects
 
-import android.view.View
 import com.alexanderPodkopaev.dev.behancer.BuildConfig
 import com.alexanderPodkopaev.dev.behancer.common.BasePresenter
 import com.alexanderPodkopaev.dev.behancer.data.Storage
@@ -8,8 +7,10 @@ import com.alexanderPodkopaev.dev.behancer.data.model.project.ProjectResponse
 import com.alexanderPodkopaev.dev.behancer.utils.ApiUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 
-class ProjectsPresenter(private val mView: ProjectsView, private val mStorage: Storage?) : BasePresenter() {
+@InjectViewState
+class ProjectsPresenter(private val mStorage: Storage?) : BasePresenter<ProjectsView>() {
 
     fun getProjects() {
         mCompositeDisposable
@@ -21,18 +22,19 @@ class ProjectsPresenter(private val mView: ProjectsView, private val mStorage: S
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { mView.showRefresh() }
-                .doFinally { mView.hideRefresh() }
+                .doOnSubscribe { viewState.showRefresh() }
+                .doFinally { viewState.hideRefresh() }
                 .subscribe(
                         {response ->
-                            mView.showProjects(response?.projects)
+                            viewState.showProjects(response?.projects)
                         }
                 ) {
-                    mView.showError()
+                    viewState.showError()
                 })
     }
 
     fun openProfileFragment(username: String?) {
-        mView.openProfileFragment(username)
+        viewState.openProfileFragment(username)
     }
+
 }

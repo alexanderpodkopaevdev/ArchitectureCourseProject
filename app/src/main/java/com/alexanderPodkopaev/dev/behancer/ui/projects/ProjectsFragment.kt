@@ -17,16 +17,31 @@ import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileActivity
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
-class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
+class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
 
     lateinit var mRecyclerView: RecyclerView
     private var mRefreshOwner: RefreshOwner? = null
     lateinit var mErrorView: View
     private var mStorage: Storage? = null
     private var mProjectsAdapter: ProjectsAdapter? = null
-    lateinit var mPresenter: ProjectsPresenter
+
+
+    @InjectPresenter
+    internal lateinit var mPresenter: ProjectsPresenter
+
+    @ProvidePresenter
+    fun providePresenter() : ProjectsPresenter {
+        return  ProjectsPresenter( mStorage)
+
+    }
+
+    override fun getPresenter(): ProjectsPresenter? {
+        return mPresenter
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -50,7 +65,6 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), ProjectsView, R
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.setTitle(R.string.projects)
-        mPresenter = ProjectsPresenter(this, mStorage)
         mProjectsAdapter = ProjectsAdapter(this)
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.adapter = mProjectsAdapter
@@ -68,13 +82,9 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), ProjectsView, R
     }
 
     override fun onRefreshData() {
-        mPresenter.getProjects()
+        mPresenter?.getProjects()
     }
 
-
-    override fun getPresenter(): ProjectsPresenter? {
-        return mPresenter
-    }
 
     override fun showProjects(projects: List<Project>?) {
         mErrorView.visibility = View.GONE

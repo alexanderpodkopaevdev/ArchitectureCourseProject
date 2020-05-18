@@ -1,10 +1,11 @@
 package com.alexanderPodkopaev.dev.behancer.common
 
-import androidx.fragment.app.Fragment
+import moxy.MvpAppCompatFragment
 
-abstract class PresenterFragment<P : BasePresenter> : Fragment() {
 
-    abstract fun getPresenter(): P?
+abstract class PresenterFragment : MvpAppCompatFragment() {
+
+    abstract fun getPresenter(): BasePresenter<*>?
 
     override fun onDetach() {
         getPresenter()?.disposeAll()

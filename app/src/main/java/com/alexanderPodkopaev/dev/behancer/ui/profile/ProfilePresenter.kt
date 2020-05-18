@@ -5,8 +5,10 @@ import com.alexanderPodkopaev.dev.behancer.data.Storage
 import com.alexanderPodkopaev.dev.behancer.utils.ApiUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 
-class ProfilePresenter(private val mView: ProfileView, private val mStorage: Storage?) : BasePresenter() {
+@InjectViewState
+class ProfilePresenter(private val mStorage: Storage?) : BasePresenter<ProfileView>() {
 
     fun getProfile(mUsername: String?) {
 
@@ -20,14 +22,14 @@ class ProfilePresenter(private val mView: ProfileView, private val mStorage: Sto
                     } else null
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { mView.showRefresh() }
-                .doFinally { mView.hideRefresh() }
+                .doOnSubscribe { viewState.showRefresh() }
+                .doFinally { viewState.hideRefresh() }
                 .subscribe(
                         { response ->
-                            mView.showProfile(response?.user)
+                            viewState.showProfile(response?.user)
                         }
                 ) {
-                    mView.showError()
+                    viewState.showError()
                 })
 
     }

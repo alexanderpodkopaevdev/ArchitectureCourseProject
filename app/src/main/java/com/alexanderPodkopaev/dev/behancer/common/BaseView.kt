@@ -1,6 +1,8 @@
 package com.alexanderPodkopaev.dev.behancer.common
 
-interface BaseView {
+import moxy.MvpView
+
+interface BaseView : MvpView {
 
     fun showRefresh()
 

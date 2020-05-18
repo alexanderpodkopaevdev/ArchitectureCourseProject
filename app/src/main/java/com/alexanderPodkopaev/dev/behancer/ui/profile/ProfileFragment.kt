@@ -16,19 +16,34 @@ import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
 import com.alexanderPodkopaev.dev.behancer.data.model.user.User
 import com.alexanderPodkopaev.dev.behancer.utils.DateUtils
 import com.squareup.picasso.Picasso
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
-class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refreshable {
+class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
     private var mRefreshOwner: RefreshOwner? = null
     lateinit var mErrorView: View
     lateinit var mProfileView: View
     private var mUsername: String? = null
     private var mStorage: Storage? = null
-    lateinit var mPresenter: ProfilePresenter
     lateinit var mProfileImage: ImageView
     lateinit var mProfileName: TextView
     lateinit var mProfileCreatedOn: TextView
     lateinit var mProfileLocation: TextView
+
+    @InjectPresenter
+    internal lateinit var mPresenter: ProfilePresenter
+
+    @ProvidePresenter
+    fun providePresenter() : ProfilePresenter {
+        return ProfilePresenter(mStorage)
+
+    }
+
+    override fun getPresenter(): ProfilePresenter? {
+        return mPresenter
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mStorage = if (context is StorageOwner) (context as StorageOwner).obtainStorage() else null
@@ -53,7 +68,6 @@ class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refr
 
         mUsername = arguments?.getString(PROFILE_KEY)
         activity?.title = mUsername
-        mPresenter = ProfilePresenter(this, mStorage)
         mProfileView.visibility = View.VISIBLE
         onRefreshData()
     }
@@ -89,9 +103,7 @@ class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refr
         }
     }
 
-    override fun getPresenter(): ProfilePresenter? {
-        return mPresenter
-    }
+
 
     override fun showProfile(user: User?) {
         mErrorView.visibility = View.GONE

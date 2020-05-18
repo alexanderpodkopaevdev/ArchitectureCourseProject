@@ -1,12 +1,13 @@
 package com.alexanderPodkopaev.dev.behancer.common
 
 import io.reactivex.disposables.CompositeDisposable
+import moxy.MvpPresenter
 
-abstract class BasePresenter {
+abstract class BasePresenter<View : BaseView> : MvpPresenter<View>() {
 
     val mCompositeDisposable = CompositeDisposable()
 
     fun disposeAll() {
-        mCompositeDisposable.clear()
+        mCompositeDisposable.dispose()
     }
 }
