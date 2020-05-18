@@ -22,8 +22,13 @@ class ProfilePresenter(private val mView: ProfileView, private val mStorage: Sto
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { mView.showRefresh() }
                 .doFinally { mView.hideRefresh() }
-                .subscribe({ response -> mView.showProfile(response?.user) })
-                { mView.showError() })
+                .subscribe(
+                        { response ->
+                            mView.showProfile(response?.user)
+                        }
+                ) {
+                    mView.showError()
+                })
 
     }
 
