@@ -1,10 +1,11 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile
 
-import androidx.fragment.app.Fragment
-import com.alexanderPodkopaev.dev.behancer.common.SingleFragmentActivity
+import com.alexanderPodkopaev.dev.behancer.AppDelegate
+import com.alexanderPodkopaev.dev.behancer.common.RefreshActivity
+import com.alexanderPodkopaev.dev.behancer.data.Storage
 import moxy.MvpAppCompatFragment
 
-class ProfileActivity : SingleFragmentActivity() {
+class ProfileActivity : RefreshActivity(), Storage.StorageOwner {
     protected override val fragment: MvpAppCompatFragment
         get() {
             if (intent != null) {
@@ -12,6 +13,10 @@ class ProfileActivity : SingleFragmentActivity() {
             }
             throw IllegalStateException("getIntent cannot be null")
         }
+
+    override fun obtainStorage(): Storage {
+        return (applicationContext as AppDelegate).storage
+    }
 
     companion object {
         const val USERNAME_KEY = "USERNAME_KEY"

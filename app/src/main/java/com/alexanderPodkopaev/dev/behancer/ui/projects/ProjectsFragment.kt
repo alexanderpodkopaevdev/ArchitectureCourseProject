@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.R
 import com.alexanderPodkopaev.dev.behancer.common.PresenterFragment
 import com.alexanderPodkopaev.dev.behancer.common.RefreshOwner
@@ -21,11 +22,11 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
+class ProjectsFragment : PresenterFragment(), ProjectsView, SwipeRefreshLayout.OnRefreshListener, ProjectsAdapter.OnItemClickListener {
 
     lateinit var mRecyclerView: RecyclerView
-    private var mRefreshOwner: RefreshOwner? = null
     lateinit var mErrorView: View
+    lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private var mStorage: Storage? = null
     private var mProjectsAdapter: ProjectsAdapter? = null
 
@@ -50,9 +51,6 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
         if (context is StorageOwner) {
             mStorage = (context as StorageOwner).obtainStorage()
         }
-        if (context is RefreshOwner) {
-            mRefreshOwner = context
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -62,6 +60,7 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mRecyclerView = view.findViewById(R.id.recycler)
         mErrorView = view.findViewById(R.id.errorView)
+        mSwipeRefreshLayout = view.findViewById(R.id.refresher)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,7 +70,8 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.adapter = mProjectsAdapter
         mUsername = arguments?.getString(PROJECT_KEY)
-        onRefreshData()
+        mSwipeRefreshLayout.setOnRefreshListener(this)
+        onRefresh()
     }
 
     override fun onItemClick(username: String?) {
@@ -80,13 +80,9 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
 
     override fun onDetach() {
         mStorage = null
-        mRefreshOwner = null
         super.onDetach()
     }
 
-    override fun onRefreshData() {
-        mPresenter.getProjects()
-    }
 
 
     override fun showProjects(projects: List<Project>?) {
@@ -104,11 +100,11 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
     }
 
     override fun showRefresh() {
-        mRefreshOwner?.setRefreshState(true)
+        mSwipeRefreshLayout.isRefreshing =true
     }
 
     override fun hideRefresh() {
-        mRefreshOwner?.setRefreshState(false)
+        mSwipeRefreshLayout.isRefreshing = false
     }
 
     override fun showError() {
@@ -123,5 +119,9 @@ class ProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Project
             return ProjectsFragment()
 
         }
+    }
+
+    override fun onRefresh() {
+        mPresenter.getProjects()
     }
 }

@@ -3,30 +3,26 @@ package com.alexanderPodkopaev.dev.behancer.common
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import com.alexanderPodkopaev.dev.behancer.AppDelegate
 import com.alexanderPodkopaev.dev.behancer.R
-import com.alexanderPodkopaev.dev.behancer.data.Storage
-import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
 
 
-abstract class SingleFragmentActivity : AppCompatActivity(), StorageOwner, OnRefreshListener, RefreshOwner {
-    private var mSwipeRefreshLayout: SwipeRefreshLayout? = null
+abstract class SingleFragmentActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ac_swipe_container)
-        mSwipeRefreshLayout = findViewById(R.id.refresher)
-        mSwipeRefreshLayout?.setOnRefreshListener(this)
+        setContentView(getLayout())
+
         if (savedInstanceState == null) {
             changeFragment(fragment)
         }
     }
 
-    protected abstract val fragment: Fragment
-    override fun obtainStorage(): Storage {
-        return (applicationContext as AppDelegate).storage
+    open fun getLayout() : Int {
+            return R.layout.ac_container
     }
+
+    protected abstract val fragment: Fragment
+
 
     fun changeFragment(fragment: Fragment) {
         val addToBackStack = supportFragmentManager.findFragmentById(R.id.fragmentContainer) != null
@@ -39,16 +35,5 @@ abstract class SingleFragmentActivity : AppCompatActivity(), StorageOwner, OnRef
         transaction.commit()
     }
 
-    override fun onRefresh() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
-        if (fragment is Refreshable) {
-            (fragment as Refreshable).onRefreshData()
-        } else {
-            setRefreshState(false)
-        }
-    }
 
-    override fun setRefreshState(refreshing: Boolean) {
-        mSwipeRefreshLayout!!.post { mSwipeRefreshLayout!!.isRefreshing = refreshing }
-    }
 }
