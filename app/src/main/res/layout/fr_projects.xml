@@ -1,23 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
 
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refresher"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <data class="ProjectsBinding">
 
-    <FrameLayout
+        <import
+            alias="V"
+            type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsViewModel" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresher"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        bind:onRefresh="@{vm.onRefreshListener}"
+        bind:refreshState="@{vm.isLoading}">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible" />
+            android:orientation="vertical">
 
-        <include
-            layout="@layout/v_error"
-            android:visibility="gone" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{vm.isError? V.GONE : V.VISIBLE}"
+                bind:clickHandler="@{vm.onItemClickListener}"
+                bind:data="@{vm.projects}" />
 
-    </FrameLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <include
+                layout="@layout/v_error"
+                android:visibility="@{vm.isError? V.VISIBLE : V.GONE}" />
+
+
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</layout>

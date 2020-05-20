@@ -2,6 +2,7 @@ package com.alexanderPodkopaev.dev.behancer.utils
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
@@ -17,14 +18,15 @@ fun loadImage(imageView: ImageView, urlImage: String) {
 
 }
 
-@BindingAdapter("bind:data", "bind:clickHandler")
+@BindingAdapter(value= arrayOf("bind:data", "bind:clickHandler"), requireAll = false)
 fun configureRecyclerView(recyclerView: RecyclerView, projects: MutableList<Project>, listener: ProjectsAdapter.OnItemClickListener) {
     val adapter = ProjectsAdapter(projects, listener)
+    recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
     recyclerView.adapter = adapter
 
 }
 
-@BindingAdapter("bind:refreshState", "bind: onRefresh")
+@BindingAdapter(value= arrayOf("bind:refreshState", "bind:onRefresh"), requireAll = false)
 fun configureSwipeRefreshLayout(swipeRefreshLayout: SwipeRefreshLayout, isLoading: Boolean, onRefreshListener: SwipeRefreshLayout.OnRefreshListener) {
     swipeRefreshLayout.setOnRefreshListener(onRefreshListener)
     swipeRefreshLayout.post { swipeRefreshLayout.isRefreshing = isLoading }

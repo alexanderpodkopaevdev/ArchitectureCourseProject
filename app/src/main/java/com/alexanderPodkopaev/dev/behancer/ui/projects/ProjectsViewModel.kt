@@ -3,6 +3,7 @@ package com.alexanderPodkopaev.dev.behancer.ui.projects
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableList
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.BuildConfig
 import com.alexanderPodkopaev.dev.behancer.data.Storage
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
@@ -12,12 +13,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class ProjectsViewModel(var mStorage: Storage?, val mOnItemClickListener: ProjectsAdapter.OnItemClickListener) {
+class ProjectsViewModel(var mStorage: Storage?, val onItemClickListener: ProjectsAdapter.OnItemClickListener) {
 
     var mDisposable: Disposable? = null
-    var mIsError: ObservableBoolean = ObservableBoolean(false)
-    var mIsLoading: ObservableBoolean = ObservableBoolean(false)
-    var mProjects: ObservableList<Project> = ObservableArrayList()
+    var isError: ObservableBoolean = ObservableBoolean(false)
+    var isLoading: ObservableBoolean = ObservableBoolean(false)
+    var projects: ObservableList<Project> = ObservableArrayList()
+    var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { loadProjects() }
 
 
     fun loadProjects() {
@@ -29,16 +31,16 @@ class ProjectsViewModel(var mStorage: Storage?, val mOnItemClickListener: Projec
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { mIsLoading.set(true) }
-                .doFinally { mIsLoading.set(false) }
+                .doOnSubscribe { isLoading.set(true) }
+                .doFinally { isLoading.set(false) }
                 .subscribe(
                         { response ->
-                            mIsError.set(false)
+                            isError.set(false)
                             if (response != null)
-                                mProjects.addAll(response.projects)
+                                projects.addAll(response.projects)
                         }
                 ) {
-                    mIsError.set(true)
+                    isError.set(true)
                 })
 
     }

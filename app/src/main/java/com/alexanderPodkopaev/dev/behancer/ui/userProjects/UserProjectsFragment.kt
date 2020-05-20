@@ -70,7 +70,7 @@ class UserProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Pro
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.setTitle(R.string.projects)
-        mProjectsAdapter = ProjectsAdapter(projects, this)
+       //mProjectsAdapter = ProjectsAdapter(projects, this)
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.adapter = mProjectsAdapter
         mUsername = arguments?.getString(PROJECT_KEY)
@@ -95,7 +95,7 @@ class UserProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Pro
     override fun showProjects(projects: List<Project>?) {
         mErrorView.visibility = View.GONE
         mRecyclerView.visibility = View.VISIBLE
-        mProjectsAdapter?.addData(projects, true)
+        //mProjectsAdapter?.addData(projects, true)
     }
 
     override fun openProfileFragment(username: String?) {

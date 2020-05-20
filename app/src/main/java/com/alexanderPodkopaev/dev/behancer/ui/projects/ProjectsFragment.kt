@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.alexanderPodkopaev.dev.behancer.R
 import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
+import com.alexanderPodkopaev.dev.behancer.databinding.ProjectsBinding
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileActivity
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileFragment
 
@@ -38,7 +39,9 @@ class ProjectsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fr_projects, container, false)
+        val binding = ProjectsBinding.inflate(inflater, container, false)
+        binding.vm = mProjectsViewModel
+        return binding.root
     }
 
 
