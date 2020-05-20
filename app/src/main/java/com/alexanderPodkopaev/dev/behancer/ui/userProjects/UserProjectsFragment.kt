@@ -70,7 +70,7 @@ class UserProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Pro
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.setTitle(R.string.projects)
-        mProjectsAdapter = ProjectsAdapter(this)
+        mProjectsAdapter = ProjectsAdapter(projects, this)
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.adapter = mProjectsAdapter
         mUsername = arguments?.getString(PROJECT_KEY)

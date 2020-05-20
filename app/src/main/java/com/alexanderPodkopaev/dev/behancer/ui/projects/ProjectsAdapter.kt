@@ -3,14 +3,12 @@ package com.alexanderPodkopaev.dev.behancer.ui.projects
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.alexanderPodkopaev.dev.behancer.R
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
 import com.alexanderPodkopaev.dev.behancer.databinding.ProjectBinding
 import java.util.*
 
 
-class ProjectsAdapter(private val mOnItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ProjectsHolder>() {
-    private val mProjects: MutableList<Project> = ArrayList()
+class ProjectsAdapter(val mProjects: MutableList<Project>, private val mOnItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ProjectsHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ProjectBinding.inflate(inflater,parent,false)
@@ -24,15 +22,6 @@ class ProjectsAdapter(private val mOnItemClickListener: OnItemClickListener) : R
 
     override fun getItemCount(): Int {
         return mProjects.size
-    }
-
-    fun addData(data: List<Project>?, isRefreshed: Boolean) {
-        if (isRefreshed) {
-            mProjects.clear()
-        }
-
-        data?.let { mProjects.addAll(it) }
-        notifyDataSetChanged()
     }
 
     interface OnItemClickListener {

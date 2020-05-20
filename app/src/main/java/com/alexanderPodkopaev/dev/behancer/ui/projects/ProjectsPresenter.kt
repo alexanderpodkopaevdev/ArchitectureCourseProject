@@ -12,27 +12,6 @@ import moxy.InjectViewState
 @InjectViewState
 class ProjectsPresenter(private val mStorage: Storage?) : BasePresenter<ProjectsView>() {
 
-    fun getProjects() {
-        mCompositeDisposable
-                .add(ApiUtils.getApiService()
-                        .getProjects(BuildConfig.API_QUERY)
-                        .doOnSuccess { response: ProjectResponse? -> mStorage?.insertProjects(response) }
-                        .onErrorReturn { throwable: Throwable ->
-                            if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.javaClass)) mStorage?.getProjects() else null
-                        }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe { viewState.showRefresh() }
-                        .doFinally { viewState.hideRefresh() }
-                        .subscribe(
-                                { response ->
-                                    viewState.showProjects(response?.projects)
-                                }
-                        ) {
-                            viewState.showError()
-                        })
-
-    }
 
     fun getProjects(username: String?) {
         mCompositeDisposable
