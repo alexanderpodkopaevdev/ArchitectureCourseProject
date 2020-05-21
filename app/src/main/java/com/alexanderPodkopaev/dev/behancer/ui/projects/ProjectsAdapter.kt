@@ -5,13 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
 import com.alexanderPodkopaev.dev.behancer.databinding.ProjectBinding
-import java.util.*
 
 
 class ProjectsAdapter(val mProjects: MutableList<Project>, private val mOnItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ProjectsHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ProjectBinding.inflate(inflater,parent,false)
+        val binding = ProjectBinding.inflate(inflater, parent, false)
         return ProjectsHolder(binding)
     }
 

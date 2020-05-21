@@ -1,12 +1,13 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile
 
+import androidx.fragment.app.Fragment
 import com.alexanderPodkopaev.dev.behancer.AppDelegate
-import com.alexanderPodkopaev.dev.behancer.common.RefreshActivity
+import com.alexanderPodkopaev.dev.behancer.common.SingleFragmentActivity
 import com.alexanderPodkopaev.dev.behancer.data.Storage
-import moxy.MvpAppCompatFragment
 
-class ProfileActivity : RefreshActivity(), Storage.StorageOwner {
-    protected override val fragment: MvpAppCompatFragment
+
+class ProfileActivity : SingleFragmentActivity(), Storage.StorageOwner {
+    protected override val fragment: Fragment
         get() {
             if (intent != null) {
                 return ProfileFragment.newInstance(intent.getBundleExtra(USERNAME_KEY))
