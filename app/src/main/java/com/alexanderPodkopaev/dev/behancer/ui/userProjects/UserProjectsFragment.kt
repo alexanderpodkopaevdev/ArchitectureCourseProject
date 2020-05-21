@@ -1,5 +1,6 @@
-package com.alexanderPodkopaev.dev.behancer.ui.userProjects
 
+package com.alexanderPodkopaev.dev.behancer.ui.userProjects
+/*
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -128,4 +129,4 @@ class UserProjectsFragment : PresenterFragment(), ProjectsView, Refreshable, Pro
             return fragment
         }
     }
-}
+}*/

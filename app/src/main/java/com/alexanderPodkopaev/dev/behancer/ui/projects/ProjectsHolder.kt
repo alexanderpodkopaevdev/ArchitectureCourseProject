@@ -18,20 +18,7 @@ class ProjectsHolder(val binding: ProjectBinding) : ViewHolder(binding.root) {
         binding.project = ProjectListItemViewModel(item)
         binding.onItemClickListener = onItemClickListener
         binding.executePendingBindings()
-/*        Picasso.get().load(item.cover.photoUrl)
-                .fit()
-                .into(mImage)
-        mName.text = item.name
-        mUsername.text = item.owners[FIRST_OWNER_INDEX].username
-        mPublishedOn.text = DateUtils.format(item.publishedOn)
-        if (onItemClickListener != null) {
-            itemView.setOnClickListener {
-                onItemClickListener.onItemClick(
-                        item.owners[FIRST_OWNER_INDEX]
-                                .username
-                )
-            }
-        }*/
+
     }
 
 }

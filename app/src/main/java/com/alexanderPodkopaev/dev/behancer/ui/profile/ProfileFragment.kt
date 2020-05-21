@@ -1,7 +1,6 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +15,6 @@ import com.alexanderPodkopaev.dev.behancer.common.Refreshable
 import com.alexanderPodkopaev.dev.behancer.data.Storage
 import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
 import com.alexanderPodkopaev.dev.behancer.data.model.user.User
-import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsActivity
-import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsFragment
-import com.alexanderPodkopaev.dev.behancer.ui.userProjects.UserProjectsActivity
 import com.alexanderPodkopaev.dev.behancer.utils.DateUtils
 import com.squareup.picasso.Picasso
 import moxy.presenter.InjectPresenter
@@ -41,7 +37,7 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
     internal lateinit var mPresenter: ProfilePresenter
 
     @ProvidePresenter
-    fun providePresenter() : ProfilePresenter {
+    fun providePresenter(): ProfilePresenter {
         return ProfilePresenter(mStorage)
 
     }
@@ -114,7 +110,6 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
     }
 
 
-
     override fun showProfile(user: User?) {
         mErrorView.visibility = View.GONE
         mProfileView.visibility = View.VISIBLE
@@ -122,11 +117,11 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
     }
 
     override fun openUserProject(username: String?) {
-        val intent = Intent(activity, UserProjectsActivity::class.java)
-        val args = Bundle()
-        args.putString(ProjectsFragment.PROJECT_KEY, username)
-        intent.putExtra(ProfileActivity.USERNAME_KEY, args)
-        startActivity(intent)
+        /*  val intent = Intent(activity, UserProjectsActivity::class.java)
+          val args = Bundle()
+          args.putString(ProjectsFragment.PROJECT_KEY, username)
+          intent.putExtra(ProfileActivity.USERNAME_KEY, args)
+          startActivity(intent)*/
     }
 
     override fun showRefresh() {
