@@ -1,7 +1,10 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile
 
+import android.util.Log
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.data.Storage
 import com.alexanderPodkopaev.dev.behancer.data.model.user.User
@@ -11,21 +14,24 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class ProfileViewModel(var mStorage: Storage?) {
-    var mUsername: String? = null
+class ProfileViewModel(var mStorage: Storage?, val mUsername: String?) : ViewModel() {
     var mDisposable: Disposable? = null
-    var isError: ObservableBoolean = ObservableBoolean(false)
-    var isLoading: ObservableBoolean = ObservableBoolean(false)
+    var isError: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    var imageUrl: ObservableField<String> = ObservableField()
-    var name: ObservableField<String> = ObservableField()
-    var createdOn: ObservableField<String> = ObservableField()
-    var location: ObservableField<String> = ObservableField()
+    var imageUrl: MutableLiveData<String> = MutableLiveData()
+    var name: MutableLiveData<String> = MutableLiveData()
+    var createdOn: MutableLiveData<String> = MutableLiveData()
+    var location: MutableLiveData<String> = MutableLiveData()
 
-    var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { loadProfile(mUsername) }
+    var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { loadProfile() }
 
-    fun loadProfile(username: String?) {
-        mUsername = username
+    init {
+        loadProfile()
+    }
+
+
+    fun loadProfile() {
         mDisposable = ApiUtils.getApiService()
                 .getUserInfo(mUsername)
                 .subscribeOn(Schedulers.io())
@@ -36,29 +42,30 @@ class ProfileViewModel(var mStorage: Storage?) {
                     } else null
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { isLoading.set(true) }
-                .doFinally { isLoading.set(false) }
+                .doOnSubscribe { isLoading.postValue(true) }
+                .doFinally { isLoading.postValue(false) }
                 .subscribe(
                         { response ->
-                            isError.set(false)
+                            isError.postValue(false)
                             if (response != null)
                                 bind(response.user)
                         }
                 ) {
-                    isError.set(true)
+                    Log.d("MYTAG", it.message)
+                    isError.postValue(true)
                 }
 
     }
 
     private fun bind(user: User) {
-        imageUrl.set(user.image.photoUrl)
-        name.set(user.displayName)
-        createdOn.set(DateUtils.format(user.createdOn ?: 0L))
-        location.set(user.location)
+        imageUrl.postValue(user.image.photoUrl)
+        name.postValue(user.displayName)
+        createdOn.postValue(DateUtils.format(user.createdOn ?: 0L))
+        location.postValue(user.location)
     }
 
 
-    fun dispatchDetach() {
+    override fun onCleared() {
         mStorage = null
         mDisposable?.dispose()
     }

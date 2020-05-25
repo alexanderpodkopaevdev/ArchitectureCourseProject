@@ -1,8 +1,7 @@
 package com.alexanderPodkopaev.dev.behancer.ui.projects
 
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableList
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.BuildConfig
 import com.alexanderPodkopaev.dev.behancer.data.Storage
@@ -13,13 +12,19 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class ProjectsViewModel(var mStorage: Storage?, val onItemClickListener: ProjectsAdapter.OnItemClickListener) {
+class ProjectsViewModel(var mStorage: Storage?, val onItemClickListener: ProjectsAdapter.OnItemClickListener) : ViewModel() {
 
     var mDisposable: Disposable? = null
-    var isError: ObservableBoolean = ObservableBoolean(false)
-    var isLoading: ObservableBoolean = ObservableBoolean(false)
-    var projects: ObservableList<Project> = ObservableArrayList()
+    var isError: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    var projects: MutableLiveData<List<Project>> = MutableLiveData()
     var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { loadProjects() }
+
+
+    init {
+        projects.value = ArrayList()
+        loadProjects()
+    }
 
 
     fun loadProjects() {
@@ -31,21 +36,21 @@ class ProjectsViewModel(var mStorage: Storage?, val onItemClickListener: Project
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { isLoading.set(true) }
-                .doFinally { isLoading.set(false) }
+                .doOnSubscribe { isLoading.postValue(true) }
+                .doFinally { isLoading.postValue(false) }
                 .subscribe(
                         { response ->
-                            isError.set(false)
+                            isError.postValue(false)
                             if (response != null)
-                                projects.addAll(response.projects)
+                                projects.postValue(response.projects)
                         }
                 ) {
-                    isError.set(true)
+                    isError.postValue(true)
                 })
 
     }
 
-    fun dispatchDetach() {
+    override fun onCleared() {
         mStorage = null
         mDisposable?.dispose()
     }

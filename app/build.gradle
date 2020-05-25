@@ -35,6 +35,9 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "2.2.0"
+    def arch_version = "2.1.0"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -63,15 +66,14 @@ dependencies {
     implementation "androidx.core:core-ktx:1.2.0"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
-/*
-    implementation "tech.schoolhelper:moxy-x:1.7.0"
-    kapt  'com.arello-mobile:moxy-compiler:1.5.5'
-    implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'*/
 
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Annotation processor
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
-/*    kapt 'com.github.moxy-community:moxy-compiler:1.0.13'
-    implementation "com.github.moxy-community:moxy:1.0.13"
-    implementation 'com.github.moxy-community:moxy-androidx:1.0.13'*/
 
 }
 repositories {

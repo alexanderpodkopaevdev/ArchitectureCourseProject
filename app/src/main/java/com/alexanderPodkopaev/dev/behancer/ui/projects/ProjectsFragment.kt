@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.alexanderPodkopaev.dev.behancer.R
+import androidx.lifecycle.ViewModelProvider
 import com.alexanderPodkopaev.dev.behancer.data.Storage.StorageOwner
 import com.alexanderPodkopaev.dev.behancer.databinding.ProjectsBinding
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileActivity
 import com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileFragment
+import com.alexanderPodkopaev.dev.behancer.utils.CustomFactoryProjects
 
 
 class ProjectsFragment : Fragment() {
@@ -34,23 +35,23 @@ class ProjectsFragment : Fragment() {
         super.onAttach(context)
         if (context is StorageOwner) {
             val mStorage = (context as StorageOwner).obtainStorage()
-            mProjectsViewModel = ProjectsViewModel(mStorage, mOnItemClickListener)
+            val factory = CustomFactoryProjects(mStorage,mOnItemClickListener)
+            mProjectsViewModel = ViewModelProvider(this,factory).get(ProjectsViewModel::class.java)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = ProjectsBinding.inflate(inflater, container, false)
         binding.vm = mProjectsViewModel
+        binding.lifecycleOwner = this
         return binding.root
     }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity?.setTitle(R.string.projects)
-
         mUsername = arguments?.getString(PROJECT_KEY)
-        mProjectsViewModel.loadProjects()
+
     }
 
     companion object {
@@ -61,8 +62,4 @@ class ProjectsFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        mProjectsViewModel.dispatchDetach()
-        super.onDetach()
-    }
 }
