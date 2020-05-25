@@ -1,48 +1,47 @@
 package com.alexanderPodkopaev.dev.behancer.data
 
-import androidx.core.util.Pair
+import androidx.lifecycle.LiveData
 import com.alexanderPodkopaev.dev.behancer.data.database.BehanceDao
-import com.alexanderPodkopaev.dev.behancer.data.model.project.Cover
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Owner
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
 import com.alexanderPodkopaev.dev.behancer.data.model.project.ProjectResponse
+import com.alexanderPodkopaev.dev.behancer.data.model.project.RichProject
+import com.alexanderPodkopaev.dev.behancer.data.model.user.User
 import com.alexanderPodkopaev.dev.behancer.data.model.user.UserResponse
 import java.util.*
 
 
 class Storage(private val mBehanceDao: BehanceDao) {
     fun insertProjects(response: ProjectResponse?) {
-        response?.let {
-            val projects = it.projects
-            mBehanceDao.insertProjects(projects)
-            val assembled = assemble(projects)
-            mBehanceDao.clearCoverTable()
-            mBehanceDao.insertCovers(assembled.first!!)
-            mBehanceDao.clearOwnerTable()
-            mBehanceDao.insertOwners(assembled.second!!)
-        }
+        response?.projects?.let { insertProjects(it) }
+
     }
 
-    private fun assemble(projects: List<Project>): Pair<List<Cover>, List<Owner>> {
-        val covers: MutableList<Cover> = ArrayList()
+    fun insertProjects(projects: List<Project>) {
+        mBehanceDao.insertProjects(projects)
+        val owners = getOwners(projects)
+        mBehanceDao.clearOwnerTable()
+        mBehanceDao.insertOwners(owners)
+    }
+
+    private fun getOwners(projects: List<Project>): List<Owner> {
         val owners: MutableList<Owner> = ArrayList()
         for (i in projects.indices) {
-            val cover = projects[i].cover
-            cover.id = i
-            cover.projectId = projects[i].id
-            covers.add(cover)
             val owner = projects[i].owners[0]
             owner.id = i
             owner.projectId = projects[i].id
             owners.add(owner)
         }
-        return Pair(covers, owners)
+        return (owners)
+    }
+
+    fun getProjectsLive(): LiveData<List<RichProject>> {
+        return mBehanceDao.getProjectsLive()
     }
 
     fun getProjects(): ProjectResponse {
         val projects = mBehanceDao.projects
         for (project in projects) {
-            project.setCover(mBehanceDao.getCoverFromProject(project.id))
             project.setOwners(mBehanceDao.getOwnersFromProject(project.id))
         }
         val response = ProjectResponse()
@@ -59,6 +58,10 @@ class Storage(private val mBehanceDao: BehanceDao) {
             mBehanceDao.insertUser(user)
             mBehanceDao.insertImage(image)
         }
+    }
+
+    fun getUserLive(): LiveData<List<User>> {
+        return mBehanceDao.getUsersLive()
     }
 
     fun getUser(username: String?): UserResponse {

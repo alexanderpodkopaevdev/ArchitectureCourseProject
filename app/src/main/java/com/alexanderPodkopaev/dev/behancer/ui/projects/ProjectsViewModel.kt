@@ -1,12 +1,13 @@
 package com.alexanderPodkopaev.dev.behancer.ui.projects
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.BuildConfig
 import com.alexanderPodkopaev.dev.behancer.data.Storage
-import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
 import com.alexanderPodkopaev.dev.behancer.data.model.project.ProjectResponse
+import com.alexanderPodkopaev.dev.behancer.data.model.project.RichProject
 import com.alexanderPodkopaev.dev.behancer.utils.ApiUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -17,37 +18,32 @@ class ProjectsViewModel(var mStorage: Storage?, val onItemClickListener: Project
     var mDisposable: Disposable? = null
     var isError: MutableLiveData<Boolean> = MutableLiveData(false)
     var isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    var projects: MutableLiveData<List<Project>> = MutableLiveData()
-    var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { loadProjects() }
+    var projects: LiveData<List<RichProject>>? = mStorage?.getProjectsLive()
+    var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { updateProjects() }
 
 
     init {
-        projects.value = ArrayList()
-        loadProjects()
+        updateProjects()
     }
 
-
-    fun loadProjects() {
+    fun updateProjects() {
         mDisposable = (ApiUtils.getApiService()
                 .getProjects(BuildConfig.API_QUERY)
-                .doOnSuccess { response: ProjectResponse? -> mStorage?.insertProjects(response) }
-                .onErrorReturn { throwable: Throwable ->
-                    if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.javaClass)) mStorage?.getProjects() else null
-                }
+                .map(ProjectResponse::projects)
+                .doOnSuccess { isError.postValue(false) }
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { isLoading.postValue(true) }
                 .doFinally { isLoading.postValue(false) }
                 .subscribe(
                         { response ->
-                            isError.postValue(false)
-                            if (response != null)
-                                projects.postValue(response.projects)
+                            mStorage?.insertProjects(response)
                         }
                 ) {
-                    isError.postValue(true)
-                })
+                    mStorage?.getProjects()
+                    isError.postValue(projects?.value.isNullOrEmpty())
 
+
+                })
     }
 
     override fun onCleared() {

@@ -1,9 +1,6 @@
 package com.alexanderPodkopaev.dev.behancer.data.model.project
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
@@ -25,7 +22,7 @@ class Project : Serializable {
     var publishedOn: Long = 0
 
     @SerializedName("covers")
-    @Ignore
+    @Embedded
     lateinit var cover: Cover
         private set
 

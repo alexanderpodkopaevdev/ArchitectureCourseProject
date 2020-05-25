@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.R
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
+import com.alexanderPodkopaev.dev.behancer.data.model.project.RichProject
 import com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsAdapter
 import com.squareup.picasso.Picasso
 
@@ -20,7 +21,7 @@ fun loadImage(imageView: ImageView, urlImage: String?) {
 }
 
 @BindingAdapter(value= arrayOf("bind:data", "bind:clickHandler"), requireAll = false)
-fun configureRecyclerView(recyclerView: RecyclerView, projects: MutableList<Project>, listener: ProjectsAdapter.OnItemClickListener) {
+fun configureRecyclerView(recyclerView: RecyclerView, projects: MutableList<RichProject>?, listener: ProjectsAdapter.OnItemClickListener) {
     val adapter = ProjectsAdapter(projects, listener)
     recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
     recyclerView.adapter = adapter

@@ -1,5 +1,6 @@
 package com.alexanderPodkopaev.dev.behancer.data.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -7,6 +8,7 @@ import androidx.room.Query
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Cover
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Owner
 import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
+import com.alexanderPodkopaev.dev.behancer.data.model.project.RichProject
 import com.alexanderPodkopaev.dev.behancer.data.model.user.Image
 import com.alexanderPodkopaev.dev.behancer.data.model.user.User
 
@@ -31,8 +33,8 @@ interface BehanceDao {
     @get:Query("select * from project")
     val projects: List<Project>
 
-    @Query("select * from cover where project_id = :projectId")
-    fun getCoverFromProject(projectId: Int): Cover
+    @Query("select * from project")
+    fun getProjectsLive() : LiveData<List<RichProject>>
 
     @Query("select * from owner where project_id = :projectId")
     fun getOwnersFromProject(projectId: Int): List<Owner>
@@ -54,6 +56,9 @@ interface BehanceDao {
 
     @get:Query("select * from user")
     val users: List<User>
+
+    @Query("select * from user")
+    fun getUsersLive() : LiveData<List<User>>
 
     @get:Query("select * from image")
     val images: List<Image>

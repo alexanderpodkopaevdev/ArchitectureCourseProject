@@ -8,10 +8,10 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 
-@Entity(foreignKeys = [ForeignKey(entity = Project::class, parentColumns = arrayOf("id"), childColumns = arrayOf("project_id"))])
+@Entity
 class Cover : Serializable {
     @PrimaryKey
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "cover_id")
     var id = 0
 
     @ColumnInfo(name = "photo_url")
