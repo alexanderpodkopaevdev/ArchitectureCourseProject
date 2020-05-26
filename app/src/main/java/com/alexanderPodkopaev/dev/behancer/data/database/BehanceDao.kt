@@ -33,7 +33,7 @@ interface BehanceDao {
     @get:Query("select * from project")
     val projects: List<Project>
 
-    @Query("select * from project")
+    @Query("select * from project order by published_on desc")
     fun getProjectsLive() : LiveData<List<RichProject>>
 
     @Query("select * from owner where project_id = :projectId")

@@ -1,8 +1,5 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile
 
-import android.util.Log
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -14,7 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class ProfileViewModel(var mStorage: Storage?, val mUsername: String?) : ViewModel() {
+class ProfileViewModel(var mStorage: Storage?, val mUsername: String?, mOnBtnClick: BtnClick) : ViewModel() {
     var mDisposable: Disposable? = null
     var isError: MutableLiveData<Boolean> = MutableLiveData(false)
     var isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -23,8 +20,8 @@ class ProfileViewModel(var mStorage: Storage?, val mUsername: String?) : ViewMod
     var name: MutableLiveData<String> = MutableLiveData()
     var createdOn: MutableLiveData<String> = MutableLiveData()
     var location: MutableLiveData<String> = MutableLiveData()
-
     var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { loadProfile() }
+    var onBtnClick: BtnClick = mOnBtnClick
 
     init {
         loadProfile()
@@ -51,7 +48,6 @@ class ProfileViewModel(var mStorage: Storage?, val mUsername: String?) : ViewMod
                                 bind(response.user)
                         }
                 ) {
-                    Log.d("MYTAG", it.message)
                     isError.postValue(true)
                 }
 
@@ -62,12 +58,18 @@ class ProfileViewModel(var mStorage: Storage?, val mUsername: String?) : ViewMod
         name.postValue(user.displayName)
         createdOn.postValue(DateUtils.format(user.createdOn ?: 0L))
         location.postValue(user.location)
+
     }
 
 
     override fun onCleared() {
         mStorage = null
         mDisposable?.dispose()
+    }
+
+    interface BtnClick {
+        fun openProject()
+
     }
 
 }

@@ -71,7 +71,8 @@
             android:layout_alignStart="@id/tv_location_details"
             android:layout_alignLeft="@id/tv_location_details"
             android:text="@string/show_projects"
-            android:enabled="false"/>
+            android:onClick="@{() -> vm.onBtnClick.openProject()}"
+            />
 
 
     </RelativeLayout>

@@ -10,7 +10,7 @@
 
         <variable
             name="vm"
-            type="com.alexanderPodkopaev.dev.behancer.ui.projects.ProjectsViewModel" />
+            type="com.alexanderPodkopaev.dev.behancer.common.BaseViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
