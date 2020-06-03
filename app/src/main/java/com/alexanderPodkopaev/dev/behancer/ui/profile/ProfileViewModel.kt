@@ -1,75 +1,64 @@
 package com.alexanderPodkopaev.dev.behancer.ui.profile
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexanderPodkopaev.dev.behancer.data.Storage
+import com.alexanderPodkopaev.dev.behancer.data.api.BehanceApi
 import com.alexanderPodkopaev.dev.behancer.data.model.user.User
 import com.alexanderPodkopaev.dev.behancer.utils.ApiUtils
-import com.alexanderPodkopaev.dev.behancer.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class ProfileViewModel(var mStorage: Storage?, val mUsername: String?, mOnBtnClick: BtnClick) : ViewModel() {
-    var mDisposable: Disposable? = null
-    var isError: MutableLiveData<Boolean> = MutableLiveData(false)
-    var isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+class ProfileViewModel {
 
-    var imageUrl: MutableLiveData<String> = MutableLiveData()
-    var name: MutableLiveData<String> = MutableLiveData()
-    var createdOn: MutableLiveData<String> = MutableLiveData()
-    var location: MutableLiveData<String> = MutableLiveData()
-    var onRefreshListener = SwipeRefreshLayout.OnRefreshListener { loadProfile() }
-    var onBtnClick: BtnClick = mOnBtnClick
-
-    init {
-        loadProfile()
-    }
+    var mCompositeDisposable = CompositeDisposable()
 
 
-    fun loadProfile() {
-        mDisposable = ApiUtils.getApiService()
+    @Inject
+    lateinit var mStorage: Storage
+
+    @Inject
+    lateinit var mBehancerApi: BehanceApi
+
+    var mUsername: String? = null
+
+    var isLoading: ObservableBoolean = ObservableBoolean(false)
+    var isError: ObservableBoolean = ObservableBoolean(false)
+    var onRefreshListener: SwipeRefreshLayout.OnRefreshListener = SwipeRefreshLayout.OnRefreshListener { this.getProfile() }
+    var user: ObservableField<User> = ObservableField()
+
+
+    fun getProfile() {
+        mCompositeDisposable.add(mBehancerApi
                 .getUserInfo(mUsername)
                 .subscribeOn(Schedulers.io())
-                .doOnSuccess { response -> mStorage?.insertUser(response) }
+                .doOnSuccess { response -> mStorage.insertUser(response) }
                 .onErrorReturn { throwable: Throwable ->
                     if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.javaClass)) {
-                        mStorage?.getUser(mUsername)
+                        mStorage.getUser(mUsername)
                     } else null
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { isLoading.postValue(true) }
-                .doFinally { isLoading.postValue(false) }
+                .doOnSubscribe { isLoading.set(true) }
+                .doFinally { isLoading.set(false) }
                 .subscribe(
                         { response ->
-                            isError.postValue(false)
+                            isError.set(false)
                             if (response != null)
-                                bind(response.user)
+                                user.set(response.user)
                         }
                 ) {
-                    isError.postValue(true)
+                    isError.set(true)
                 }
+        )
 
     }
 
-    private fun bind(user: User) {
-        imageUrl.postValue(user.image.photoUrl)
-        name.postValue(user.displayName)
-        createdOn.postValue(DateUtils.format(user.createdOn ?: 0L))
-        location.postValue(user.location)
-
-    }
-
-
-    override fun onCleared() {
-        mStorage = null
-        mDisposable?.dispose()
-    }
-
-    interface BtnClick {
-        fun openProject()
-
+    fun dispatchDetach() {
+        mCompositeDisposable.dispose()
     }
 
 }

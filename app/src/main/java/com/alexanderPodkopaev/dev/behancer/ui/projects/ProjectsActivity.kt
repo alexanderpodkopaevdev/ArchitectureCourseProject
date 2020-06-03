@@ -6,11 +6,8 @@ import com.alexanderPodkopaev.dev.behancer.common.SingleFragmentActivity
 import com.alexanderPodkopaev.dev.behancer.data.Storage
 
 
-class ProjectsActivity : SingleFragmentActivity(), Storage.StorageOwner {
+class ProjectsActivity : SingleFragmentActivity() {
     override val fragment: Fragment
         get() = ProjectsFragment.newInstance()
 
-    override fun obtainStorage(): Storage {
-        return (applicationContext as AppDelegate).storage
-    }
 }

@@ -9,7 +9,7 @@ import com.alexanderPodkopaev.dev.behancer.databinding.ProjectBinding
 class ProjectsHolder(val binding: ProjectBinding) : ViewHolder(binding.root) {
 
 
-    fun bind(item: RichProject, onItemClickListener: ProjectsAdapter.OnItemClickListener?) {
+    fun bind(item: Project, onItemClickListener: ProjectsAdapter.OnItemClickListener?) {
         binding.project = ProjectListItemViewModel(item)
         binding.onItemClickListener = onItemClickListener
         binding.executePendingBindings()

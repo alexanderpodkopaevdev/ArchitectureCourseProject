@@ -21,7 +21,7 @@ fun loadImage(imageView: ImageView, urlImage: String?) {
 }
 
 @BindingAdapter(value= arrayOf("bind:data", "bind:clickHandler"), requireAll = false)
-fun configureRecyclerView(recyclerView: RecyclerView, projects: MutableList<RichProject>?, listener: ProjectsAdapter.OnItemClickListener) {
+fun configureRecyclerView(recyclerView: RecyclerView, projects: MutableList<Project>?, listener: ProjectsAdapter.OnItemClickListener) {
     val adapter = ProjectsAdapter(projects, listener)
     recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
     recyclerView.adapter = adapter

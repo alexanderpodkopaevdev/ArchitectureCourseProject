@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data class="ProfileBinding">
 
         <variable
-            name="vm"
-            type="com.alexanderPodkopaev.dev.behancer.ui.profile.ProfileViewModel" />
+            name="user"
+            type="com.alexanderPodkopaev.dev.behancer.data.model.user.User" />
 
     </data>
 
@@ -22,7 +21,7 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:contentDescription="@string/content_description_details"
-            app:imageUrl="@{vm.imageUrl}" />
+            app:imageUrl="@{user.image.photoUrl}" />
 
         <TextView
             android:id="@+id/tv_display_name_details"
@@ -33,7 +32,7 @@
             android:layout_marginLeft="8dp"
             android:layout_toEndOf="@id/iv_profile"
             android:layout_toRightOf="@id/iv_profile"
-            android:text="@{vm.name}"
+            android:text="@{user.displayName}"
             android:textColor="@color/colorAccent"
             android:textStyle="bold" />
 
@@ -51,8 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_username_details"
             android:layout_alignStart="@id/tv_username_details"
-            android:layout_alignLeft="@id/tv_username_details"
-            android:text="@{vm.createdOn}" />
+            android:layout_alignLeft="@id/tv_username_details"/>
 
         <TextView
             android:id="@+id/tv_location_details"
@@ -61,18 +59,7 @@
             android:layout_below="@id/tv_created_on_details"
             android:layout_alignStart="@id/tv_created_on_details"
             android:layout_alignLeft="@id/tv_created_on_details"
-            android:text="@{vm.location}" />
-
-        <Button
-            android:id="@+id/btn_show_projects"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_location_details"
-            android:layout_alignStart="@id/tv_location_details"
-            android:layout_alignLeft="@id/tv_location_details"
-            android:text="@string/show_projects"
-            android:onClick="@{() -> vm.onBtnClick.openProject()}"
-            />
+            android:text="@{user.location}" />
 
 
     </RelativeLayout>

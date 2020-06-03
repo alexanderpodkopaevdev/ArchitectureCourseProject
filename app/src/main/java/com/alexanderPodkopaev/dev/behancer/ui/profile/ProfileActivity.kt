@@ -6,7 +6,7 @@ import com.alexanderPodkopaev.dev.behancer.common.SingleFragmentActivity
 import com.alexanderPodkopaev.dev.behancer.data.Storage
 
 
-class ProfileActivity : SingleFragmentActivity(), Storage.StorageOwner {
+class ProfileActivity : SingleFragmentActivity() {
     protected override val fragment: Fragment
         get() {
             if (intent != null) {
@@ -15,9 +15,6 @@ class ProfileActivity : SingleFragmentActivity(), Storage.StorageOwner {
             throw IllegalStateException("getIntent cannot be null")
         }
 
-    override fun obtainStorage(): Storage {
-        return (applicationContext as AppDelegate).storage
-    }
 
     companion object {
         const val USERNAME_KEY = "USERNAME_KEY"

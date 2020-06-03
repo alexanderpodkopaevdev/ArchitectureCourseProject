@@ -1,21 +1,20 @@
 package com.alexanderPodkopaev.dev.behancer.ui.projects
 
-import com.alexanderPodkopaev.dev.behancer.data.model.project.RichProject
+import com.alexanderPodkopaev.dev.behancer.data.model.project.Project
 import com.alexanderPodkopaev.dev.behancer.utils.DateUtils
 
-class ProjectListItemViewModel(item: RichProject) {
+class ProjectListItemViewModel(item: Project) {
     val imageUrl: String?
     val name: String?
     val username: String?
     val publishedOn: String?
 
     init {
-        imageUrl = item.mProject.cover.photoUrl
-        name = item.mProject.name
-        publishedOn = DateUtils.format(item.mProject.publishedOn)
-        username = if (!item.mOwners.isNullOrEmpty())
-            item.mOwners[FIRST_OWNER_INDEX].username
-        else ""
+        imageUrl = item.cover.photoUrl
+        name = item.name
+        publishedOn = DateUtils.format(item.publishedOn)
+        username = item.owners[FIRST_OWNER_INDEX].username
+
     }
 
     companion object {
